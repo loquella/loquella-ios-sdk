@@ -23,6 +23,12 @@
 /* Begin PBXBuildFile section */
 		3BDCF3EA203B0F4B00375A3F /* LoquellaSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = 3BDCF3E8203B0F4B00375A3F /* LoquellaSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3BDCF3F1203B102700375A3F /* LoquellaSDK.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BDCF3F0203B102700375A3F /* LoquellaSDK.swift */; };
+		3BDCF3FE203B182900375A3F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BDCF3FD203B182900375A3F /* AppDelegate.swift */; };
+		3BDCF400203B182900375A3F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BDCF3FF203B182900375A3F /* ViewController.swift */; };
+		3BDCF403203B182900375A3F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3BDCF401203B182900375A3F /* Main.storyboard */; };
+		3BDCF405203B182900375A3F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3BDCF404203B182900375A3F /* Assets.xcassets */; };
+		3BDCF408203B182900375A3F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3BDCF406203B182900375A3F /* LaunchScreen.storyboard */; };
+		3BDCF40E203B190300375A3F /* LoquellaSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3BDCF3E5203B0F4B00375A3F /* LoquellaSDK.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +36,13 @@
 		3BDCF3E8203B0F4B00375A3F /* LoquellaSDK.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LoquellaSDK.h; sourceTree = "<group>"; };
 		3BDCF3E9203B0F4B00375A3F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3BDCF3F0203B102700375A3F /* LoquellaSDK.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoquellaSDK.swift; sourceTree = "<group>"; };
+		3BDCF3FB203B182900375A3F /* LoquellaSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LoquellaSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		3BDCF3FD203B182900375A3F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		3BDCF3FF203B182900375A3F /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		3BDCF402203B182900375A3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		3BDCF404203B182900375A3F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		3BDCF407203B182900375A3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		3BDCF409203B182900375A3F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -40,6 +53,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		3BDCF3F8203B182900375A3F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3BDCF40E203B190300375A3F /* LoquellaSDK.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -47,7 +68,9 @@
 			isa = PBXGroup;
 			children = (
 				3BDCF3E7203B0F4B00375A3F /* LoquellaSDK */,
+				3BDCF3FC203B182900375A3F /* LoquellaSample */,
 				3BDCF3E6203B0F4B00375A3F /* Products */,
+				3BDCF40D203B190300375A3F /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -55,6 +78,7 @@
 			isa = PBXGroup;
 			children = (
 				3BDCF3E5203B0F4B00375A3F /* LoquellaSDK.framework */,
+				3BDCF3FB203B182900375A3F /* LoquellaSample.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -67,6 +91,26 @@
 				3BDCF3F0203B102700375A3F /* LoquellaSDK.swift */,
 			);
 			path = LoquellaSDK;
+			sourceTree = "<group>";
+		};
+		3BDCF3FC203B182900375A3F /* LoquellaSample */ = {
+			isa = PBXGroup;
+			children = (
+				3BDCF3FD203B182900375A3F /* AppDelegate.swift */,
+				3BDCF3FF203B182900375A3F /* ViewController.swift */,
+				3BDCF401203B182900375A3F /* Main.storyboard */,
+				3BDCF404203B182900375A3F /* Assets.xcassets */,
+				3BDCF406203B182900375A3F /* LaunchScreen.storyboard */,
+				3BDCF409203B182900375A3F /* Info.plist */,
+			);
+			path = LoquellaSample;
+			sourceTree = "<group>";
+		};
+		3BDCF40D203B190300375A3F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -101,12 +145,30 @@
 			productReference = 3BDCF3E5203B0F4B00375A3F /* LoquellaSDK.framework */;
 			productType = "com.apple.product-type.framework";
 		};
+		3BDCF3FA203B182900375A3F /* LoquellaSample */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3BDCF40A203B182900375A3F /* Build configuration list for PBXNativeTarget "LoquellaSample" */;
+			buildPhases = (
+				3BDCF3F7203B182900375A3F /* Sources */,
+				3BDCF3F8203B182900375A3F /* Frameworks */,
+				3BDCF3F9203B182900375A3F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = LoquellaSample;
+			productName = LoquellaSample;
+			productReference = 3BDCF3FB203B182900375A3F /* LoquellaSample.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		3BDCF3DC203B0F4B00375A3F /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 0920;
 				LastUpgradeCheck = 0920;
 				ORGANIZATIONNAME = "House of Code ApS";
 				TargetAttributes = {
@@ -119,6 +181,10 @@
 						CreatedOnToolsVersion = 9.2;
 						ProvisioningStyle = Automatic;
 					};
+					3BDCF3FA203B182900375A3F = {
+						CreatedOnToolsVersion = 9.2;
+						ProvisioningStyle = Automatic;
+					};
 				};
 			};
 			buildConfigurationList = 3BDCF3DF203B0F4B00375A3F /* Build configuration list for PBXProject "LoquellaSDK" */;
@@ -127,6 +193,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = 3BDCF3DB203B0F4B00375A3F;
 			productRefGroup = 3BDCF3E6203B0F4B00375A3F /* Products */;
@@ -135,6 +202,7 @@
 			targets = (
 				3BDCF3E4203B0F4B00375A3F /* LoquellaSDK */,
 				3BDCF3F2203B130F00375A3F /* UniversalLoquellaSDK */,
+				3BDCF3FA203B182900375A3F /* LoquellaSample */,
 			);
 		};
 /* End PBXProject section */
@@ -144,6 +212,16 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3BDCF3F9203B182900375A3F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3BDCF408203B182900375A3F /* LaunchScreen.storyboard in Resources */,
+				3BDCF405203B182900375A3F /* Assets.xcassets in Resources */,
+				3BDCF403203B182900375A3F /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -174,7 +252,35 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		3BDCF3F7203B182900375A3F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3BDCF400203B182900375A3F /* ViewController.swift in Sources */,
+				3BDCF3FE203B182900375A3F /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		3BDCF401203B182900375A3F /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3BDCF402203B182900375A3F /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		3BDCF406203B182900375A3F /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3BDCF407203B182900375A3F /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		3BDCF3EB203B0F4B00375A3F /* Debug */ = {
@@ -349,6 +455,34 @@
 			};
 			name = Release;
 		};
+		3BDCF40B203B182900375A3F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = LoquellaSample/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = io.houseofcode.LoquellaSample;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		3BDCF40C203B182900375A3F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = LoquellaSample/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = io.houseofcode.LoquellaSample;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -375,6 +509,15 @@
 			buildConfigurations = (
 				3BDCF3F4203B130F00375A3F /* Debug */,
 				3BDCF3F5203B130F00375A3F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3BDCF40A203B182900375A3F /* Build configuration list for PBXNativeTarget "LoquellaSample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3BDCF40B203B182900375A3F /* Debug */,
+				3BDCF40C203B182900375A3F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

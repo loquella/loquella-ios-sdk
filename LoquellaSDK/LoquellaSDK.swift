@@ -9,12 +9,12 @@
 import Foundation
 import UIKit
 
-extension String {
+public extension String {
     /**
      Translate a single string
      
      */
-    func translate() -> String {
+    public func translate() -> String {
         // TODO: Imeplement actual logic
         return "[tr]: \(self)"
     }
@@ -23,7 +23,7 @@ extension String {
      Translates a single string and saves a comment for the translator
      
      */
-    func translate(comment: String) -> String {
+    public func translate(comment: String) -> String {
         // TODO: Imeplement actual logic
         return "[tr]: \(self)"
     }
@@ -32,7 +32,7 @@ extension String {
      Translate two strings but only showing either one or the other depending on count input
      
      */
-    func translatePlural(count: Int, other: String) -> String {
+    public func translatePlural(count: Int, other: String) -> String {
         if count == 1 {
             return translate()
         } else {
@@ -41,21 +41,47 @@ extension String {
     }
 }
 
-extension UIView {
+public extension UILabel {
+    public func translate() {
+        if let text = self.text {
+            self.text = text.translate()
+        }
+    }
+    
+    public func translate(comment: String) {
+        translate() // TODO: implement
+    }
+}
+
+public extension UIButton {
+    public func translate() {
+        self.translate(state: .normal)
+    }
+    
+    public func translate(state: UIControlState) {
+        setTitle(self.title(for: state)?.translate() ?? "", for: state)
+    }
+    
+    public func translate(comment: String) {
+        self.translate(state: .normal)
+    }
+}
+
+public extension UIView {
     /**
      Traverses all subviews and autotranslates anything with a label
      
      */
-    func translateAll() {
+    public func translateAll() {
         self.subviews.forEach { (view) in
             if view.isKind(of: UILabel.self) {
                 if let label = view as? UILabel {
-                    label.text = label.text?.translate() ?? ""
+                    label.translate()
                 }
             } else if view.isKind(of: UIButton.self) {
                 if let button = view as? UIButton {
                     // TODO: Support all states
-                    button.setTitle(button.title(for: .normal)?.translate() ?? "", for: .normal)
+                    button.translate(state: .normal)
                 }
             }
         }

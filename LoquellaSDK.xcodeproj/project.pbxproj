@@ -6,14 +6,30 @@
 	objectVersion = 48;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		3BDCF3F2203B130F00375A3F /* UniversalLoquellaSDK */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 3BDCF3F3203B130F00375A3F /* Build configuration list for PBXAggregateTarget "UniversalLoquellaSDK" */;
+			buildPhases = (
+				3BDCF3F6203B131B00375A3F /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = UniversalLoquellaSDK;
+			productName = UniversalLoquellaSDK;
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
 		3BDCF3EA203B0F4B00375A3F /* LoquellaSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = 3BDCF3E8203B0F4B00375A3F /* LoquellaSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3BDCF3F1203B102700375A3F /* LoquellaSDK.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BDCF3F0203B102700375A3F /* LoquellaSDK.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		3BDCF3E5203B0F4B00375A3F /* LoquellaSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = LoquellaSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3BDCF3E8203B0F4B00375A3F /* LoquellaSDK.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LoquellaSDK.h; sourceTree = "<group>"; };
 		3BDCF3E9203B0F4B00375A3F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3BDCF3F0203B102700375A3F /* LoquellaSDK.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoquellaSDK.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -48,6 +64,7 @@
 			children = (
 				3BDCF3E8203B0F4B00375A3F /* LoquellaSDK.h */,
 				3BDCF3E9203B0F4B00375A3F /* Info.plist */,
+				3BDCF3F0203B102700375A3F /* LoquellaSDK.swift */,
 			);
 			path = LoquellaSDK;
 			sourceTree = "<group>";
@@ -95,6 +112,11 @@
 				TargetAttributes = {
 					3BDCF3E4203B0F4B00375A3F = {
 						CreatedOnToolsVersion = 9.2;
+						LastSwiftMigration = 0920;
+						ProvisioningStyle = Automatic;
+					};
+					3BDCF3F2203B130F00375A3F = {
+						CreatedOnToolsVersion = 9.2;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -112,6 +134,7 @@
 			projectRoot = "";
 			targets = (
 				3BDCF3E4203B0F4B00375A3F /* LoquellaSDK */,
+				3BDCF3F2203B130F00375A3F /* UniversalLoquellaSDK */,
 			);
 		};
 /* End PBXProject section */
@@ -126,11 +149,28 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		3BDCF3F6203B131B00375A3F /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#!/bin/sh\nUNIVERSAL_OUTPUTFOLDER=${BUILD_DIR}/${CONFIGURATION}-universal\n\n# make sure the output directory exists\nmkdir -p \"${UNIVERSAL_OUTPUTFOLDER}\"\n\n# Step 1. Build Device and Simulator versions\nxcodebuild -target \"LoquellaSDK\" ONLY_ACTIVE_ARCH=NO -configuration ${CONFIGURATION} -sdk iphoneos  BUILD_DIR=\"${BUILD_DIR}\" BUILD_ROOT=\"${BUILD_ROOT}\" clean build\nxcodebuild -target \"LoquellaSDK\" -configuration ${CONFIGURATION} -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO BUILD_DIR=\"${BUILD_DIR}\" BUILD_ROOT=\"${BUILD_ROOT}\" clean build\n\n# Step 2. Copy the framework structure (from iphoneos build) to the universal folder\ncp -R \"${BUILD_DIR}/${CONFIGURATION}-iphoneos/LoquellaSDK.framework\" \"${UNIVERSAL_OUTPUTFOLDER}/\"\n\n# Step 3. Copy Swift modules from iphonesimulator build (if it exists) to the copied framework directory\nSIMULATOR_SWIFT_MODULES_DIR=\"${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/LoquellaSDK.framework/Modules/LoquellaSDK.swiftmodule/.\"\nif [ -d \"${SIMULATOR_SWIFT_MODULES_DIR}\" ]; then\ncp -R \"${SIMULATOR_SWIFT_MODULES_DIR}\" \"${UNIVERSAL_OUTPUTFOLDER}/LoquellaSDK.framework/Modules/LoquellaSDK.swiftmodule\"\nfi\n\n# Step 4. Create universal binary file using lipo and place the combined executable in the copied framework directory\nlipo -create -output \"${UNIVERSAL_OUTPUTFOLDER}/LoquellaSDK.framework/LoquellaSDK\" \"${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/LoquellaSDK.framework/LoquellaSDK\" \"${BUILD_DIR}/${CONFIGURATION}-iphoneos/LoquellaSDK.framework/LoquellaSDK\"\n\n# Step 5. Convenience step to copy the framework to the project's directory\ncp -R \"${UNIVERSAL_OUTPUTFOLDER}/LoquellaSDK.framework\" \"${PROJECT_DIR}\"\n\n# Step 6. Convenience step to open the project's directory in Finder\nopen \"${PROJECT_DIR}\"";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		3BDCF3E0203B0F4B00375A3F /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3BDCF3F1203B102700375A3F /* LoquellaSDK.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -253,6 +293,29 @@
 		3BDCF3EE203B0F4B00375A3F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = LoquellaSDK/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = io.houseofcode.LoquellaSDK;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		3BDCF3EF203B0F4B00375A3F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
@@ -268,25 +331,21 @@
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
-			name = Debug;
+			name = Release;
 		};
-		3BDCF3EF203B0F4B00375A3F /* Release */ = {
+		3BDCF3F4203B130F00375A3F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = LoquellaSDK/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = io.houseofcode.LoquellaSDK;
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		3BDCF3F5203B130F00375A3F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
 		};
@@ -307,6 +366,15 @@
 			buildConfigurations = (
 				3BDCF3EE203B0F4B00375A3F /* Debug */,
 				3BDCF3EF203B0F4B00375A3F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3BDCF3F3203B130F00375A3F /* Build configuration list for PBXAggregateTarget "UniversalLoquellaSDK" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3BDCF3F4203B130F00375A3F /* Debug */,
+				3BDCF3F5203B130F00375A3F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

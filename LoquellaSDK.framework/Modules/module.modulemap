@@ -1,0 +1,11 @@
+framework module LoquellaSDK {
+  umbrella header "LoquellaSDK.h"
+
+  export *
+  module * { export * }
+}
+
+module LoquellaSDK.Swift {
+    header "LoquellaSDK-Swift.h"
+    requires objc
+}

@@ -17,8 +17,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
-        let numberOfPies = 2
-        self.titleLabel.text = "I like one pie".translatePlural(count: numberOfPies, other: "I like two pies")
+        self.titleLabel.text = "The quick brown fox jumps over the lazy dog".translate()
     }
 }
 

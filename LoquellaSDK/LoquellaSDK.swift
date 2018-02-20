@@ -7,83 +7,83 @@
 //
 
 import Foundation
-import UIKit
 
-public extension String {
-    /**
-     Translate a single string
-     
-     */
-    public func translate() -> String {
-        // TODO: Imeplement actual logic
-        return "[tr]: \(self)"
+
+public class LoquellaSDK {
+    
+    public static let sharedInstance: LoquellaSDK = LoquellaSDK()
+    
+    private var apiKey: String?
+    
+    private var currentLocale: String = "en-en"
+    private var currentRevision: Int = 0
+    private var currentTranslations: Dictionary<String, Any> = [:]
+    
+    public func setApiKey(_ key: String) {
+        print("[LoquellaSDK/setApiKey]: New api set: \(key)")
+        
+        self.apiKey = key
+        
+        self.updateCurrentLocale()
+        self.loadPreloadedTranslations()
+        self.fetchLatestTranslations()
+    }
+
+    private func updateCurrentLocale() {
+        self.currentLocale = Locale.current.identifier.replacingOccurrences(of: "_", with: "-").lowercased()
+        print("[LoquellaSDK/updateCurrentLocale]: Setting current locale based on device settings to: \(self.currentLocale)")
     }
     
-    /**
-     Translates a single string and saves a comment for the translator
-     
-     */
-    public func translate(comment: String) -> String {
-        // TODO: Imeplement actual logic
-        return "[tr]: \(self)"
-    }
-    
-    /**
-     Translate two strings but only showing either one or the other depending on count input
-     
-     */
-    public func translatePlural(count: Int, other: String) -> String {
-        if count == 1 {
-            return translate()
+    private func loadPreloadedTranslations() {
+        print("[LoquellaSDK/loadPreloadedTranslations]: Loading translations from disc (looking for loquella.json)")
+        
+        guard let path = Bundle.main.path(forResource: "loquella", ofType: "json") else {
+            print("[LoquellaSDK/loadPreloadedTranslations]: Unable toload loquella.json")
+            return
+        }
+        
+        print("[LoquellaSDK/loadPreloadedTranslations]: Found loquella.json at path \(path)")
+        
+        let url = URL(fileURLWithPath: path)
+        
+        guard let jsonData = try? Data(contentsOf: url),
+            let jsonObject = try? JSONSerialization.jsonObject(with: jsonData, options: .allowFragments),
+            let jsonDict = jsonObject as? Dictionary<String, Any>,
+            let revString = jsonDict["number"] as? String,
+            let rev = Int(revString),
+            let translations = jsonDict["translations"] as? Dictionary<String, Any> else {
+            print("[LoquellaSDK/loadPreloadedTranslations]: Unable to load loquella.json (bad format?)")
+            return
+        }
+        
+        if rev > self.currentRevision {
+            print("[LoquellaSDK/loadPreloadedTranslations]: Loaded loquella.json with revision: \(rev)")
+            self.currentTranslations = translations
         } else {
-            return other.translate()
-        }
-    }
-}
-
-public extension UILabel {
-    public func translate() {
-        if let text = self.text {
-            self.text = text.translate()
+            print("[LoquellaSDK/loadPreloadedTranslations]: Revision found in loquella.json is \(rev) but the the current revision is \(self.currentRevision) - skipping loquella.json")
         }
     }
     
-    public func translate(comment: String) {
-        translate() // TODO: implement
-    }
-}
-
-public extension UIButton {
-    public func translate() {
-        self.translate(state: .normal)
+    private func fetchLatestTranslations() {
+        print("[LoquellaSDK/fetchLatestTranslations]: Checking API for new translations")
+        // Fetch new loquella.json from api
     }
     
-    public func translate(state: UIControlState) {
-        setTitle(self.title(for: state)?.translate() ?? "", for: state)
+    private func markMissingTranslation(key: String, comment: String?) {
+        // Send missing key to webservice
     }
     
-    public func translate(comment: String) {
-        self.translate(state: .normal)
-    }
-}
+    public func translate(key: String, comment: String?) -> String {
 
-public extension UIView {
-    /**
-     Traverses all subviews and autotranslates anything with a label
-     
-     */
-    public func translateAll() {
-        self.subviews.forEach { (view) in
-            if view.isKind(of: UILabel.self) {
-                if let label = view as? UILabel {
-                    label.translate()
-                }
-            } else if view.isKind(of: UIButton.self) {
-                if let button = view as? UIButton {
-                    // TODO: Support all states
-                    button.translate(state: .normal)
-                }
+        if let source = self.currentTranslations[key] as? Dictionary<String, Any> {
+            if let target = source[self.currentLocale] as? String {
+                return target
             }
         }
+        
+        self.markMissingTranslation(key: key, comment: comment)
+        
+        return key
     }
+    
 }

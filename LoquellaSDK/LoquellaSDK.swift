@@ -11,72 +11,183 @@ import Foundation
 
 public class LoquellaSDK {
     
+    public enum LogLevel {
+        case none
+        case verbose
+        case all
+    }
+    
     public static let sharedInstance: LoquellaSDK = LoquellaSDK()
     
     private var apiKey: String?
+    
+    public var logLevel: LogLevel = .none
     
     private var currentLocale: String = "en-en"
     private var currentRevision: Int = 0
     private var currentTranslations: Dictionary<String, Any> = [:]
     
+    let urlSession = URLSession(configuration: .default)
+    var latestDataTask: URLSessionDataTask?
+    
     public func setApiKey(_ key: String) {
-        print("[LoquellaSDK/setApiKey]: New api set: \(key)")
+        self.log("[LoquellaSDK/setApiKey]: New api key set: \(key)")
         
         self.apiKey = key
         
         self.updateCurrentLocale()
-        self.loadPreloadedTranslations()
+        
+        if (self.hasRevisionInDocuments()) {
+            self.restoreRevisionFromDocuments()
+        } else {
+            self.loadPreloadedTranslationsFromBundle()
+        }
+        
         self.fetchLatestTranslations()
     }
 
     private func updateCurrentLocale() {
         self.currentLocale = Locale.current.identifier.replacingOccurrences(of: "_", with: "-").lowercased()
-        print("[LoquellaSDK/updateCurrentLocale]: Setting current locale based on device settings to: \(self.currentLocale)")
+        self.log("[LoquellaSDK/updateCurrentLocale]: Setting current locale based on device settings to: \(self.currentLocale)")
     }
     
-    private func loadPreloadedTranslations() {
-        print("[LoquellaSDK/loadPreloadedTranslations]: Loading translations from disc (looking for loquella.json)")
+    private func loadPreloadedTranslationsFromBundle() {
+        self.log("[LoquellaSDK/loadPreloadedTranslations]: Loading translations from bundle (looking for loquella.json)")
         
         guard let path = Bundle.main.path(forResource: "loquella", ofType: "json") else {
-            print("[LoquellaSDK/loadPreloadedTranslations]: Unable toload loquella.json")
+            self.log("[LoquellaSDK/loadPreloadedTranslations]: Unable to load loquella.json from bundle")
             return
         }
         
-        print("[LoquellaSDK/loadPreloadedTranslations]: Found loquella.json at path \(path)")
+        self.log("[LoquellaSDK/loadPreloadedTranslations]: Found loquella.json at path \(path) in bundle")
         
         let url = URL(fileURLWithPath: path)
         
-        guard let jsonData = try? Data(contentsOf: url),
-            let jsonObject = try? JSONSerialization.jsonObject(with: jsonData, options: .allowFragments),
-            let jsonDict = jsonObject as? Dictionary<String, Any>,
-            let revString = jsonDict["number"] as? String,
-            let rev = Int(revString),
-            let translations = jsonDict["translations"] as? Dictionary<String, Any> else {
-            print("[LoquellaSDK/loadPreloadedTranslations]: Unable to load loquella.json (bad format?)")
+        guard let jsonData = try? Data(contentsOf: url) else {
+            self.log("[LoquellaSDK/loadPreloadedTranslations]: Unable to load loquella.json from bundle")
             return
         }
         
-        if rev > self.currentRevision {
-            print("[LoquellaSDK/loadPreloadedTranslations]: Loaded loquella.json with revision: \(rev)")
-            self.currentTranslations = translations
-        } else {
-            print("[LoquellaSDK/loadPreloadedTranslations]: Revision found in loquella.json is \(rev) but the the current revision is \(self.currentRevision) - skipping loquella.json")
-        }
+        self.log("[LoquellaSDK/loadPreloadedTranslations]: Got new data - trying to extract revision")
+        self.extractRevisionFromData(data: jsonData)
+        self.saveCurrentRevisionToDocuments()
     }
     
+    
     private func fetchLatestTranslations() {
-        print("[LoquellaSDK/fetchLatestTranslations]: Checking API for new translations")
-        // Fetch new loquella.json from api
+        self.log("[LoquellaSDK/fetchLatestTranslations]: Checking API for new translations")
+        
+        self.latestDataTask?.cancel()
+        
+        guard
+            let key = self.apiKey,
+            let url = URL(string: "http://localhost:3000/api/projects/\(key)/revisions/latest?ref=\(self.currentRevision)") else {
+                return
+        }
+        
+        self.latestDataTask = self.urlSession.dataTask(with: url, completionHandler: { (data, response, error) in
+            defer { self.latestDataTask = nil }
+            
+            if let error = error {
+                self.log("[LoquellaSDK/fetchLatestTranslations]: Failed to get latest translations: \(error.localizedDescription)")
+            } else {
+                if let data = data,
+                    let response = response as? HTTPURLResponse,
+                    response.statusCode == 200 {
+                    self.log("[LoquellaSDK/fetchLatestTranslations]: Got new data - trying to extract revision");
+                    
+                    DispatchQueue.main.async {
+                        self.extractRevisionFromData(data: data)
+                        self.saveCurrentRevisionToDocuments()
+                    }
+                } else {
+                    self.log("[LoquellaSDK/fetchLatestTranslations]: Downloaded data but unable to parse it")
+                }
+            }
+        })
+     
+        self.latestDataTask?.resume()
     }
     
     private func markMissingTranslation(key: String, comment: String?) {
         // Send missing key to webservice
     }
     
+    private func saveCurrentRevisionToDocuments() {
+        self.log("[LoquellaSDK/saveCurrentRevisionToDocuments]: Saving revision \(self.currentRevision) to documents")
+        
+        let path = self.documentsPath()
+        
+        let jsonObject = ["number": "\(self.currentRevision)", "translations": self.currentTranslations] as [String : Any]
+
+        guard
+            let jsonData = try? JSONSerialization.data(withJSONObject: jsonObject, options: []),
+            let jsonString = String(bytes: jsonData, encoding: .utf8) else {
+            self.log("[LoquellaSDK/saveCurrentRevisionToDocuments]: Unable to convert revision \(self.currentRevision) to json")
+            return
+        }
+        
+        do {
+            try jsonString.write(to: path, atomically: true, encoding: .utf8)
+            self.log("[LoquellaSDK/saveCurrentRevisionToDocuments]: Saved revision \(self.currentRevision) to documents folder (\(path.absoluteString))")
+        } catch {
+            self.log("[LoquellaSDK/saveCurrentRevisionToDocuments]: Failed to save revision \(self.currentRevision) to documents folder (\(path.absoluteString))")
+        }
+    }
+    
+    private func restoreRevisionFromDocuments() {
+        let path = self.documentsPath()
+
+        guard let jsonData = try? Data(contentsOf: path) else {
+            self.log("[LoquellaSDK/restoreRevisionFromDocuments]: Unable to load loquella.json from documents")
+            return
+        }
+        
+        self.log("[LoquellaSDK/restoreRevisionFromDocuments]: Got new data - trying to extract revision")
+        self.extractRevisionFromData(data: jsonData)
+    }
+    
+    private func documentsPath() -> URL {
+        guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).last else {
+            fatalError("No document directory found in application bundle.")
+        }
+        
+        return documentsDirectory.appendingPathComponent("loquella.json")
+    }
+    
+    private func hasRevisionInDocuments() -> Bool {
+        return (try? documentsPath().checkResourceIsReachable()) != nil
+    }
+    
+    private func extractRevisionFromData(data: Data) {
+        self.log("[LoquellaSDK/extractRevisionFromData]: Looking for new revision in data: \(data)")
+
+        guard
+            let jsonObject = try? JSONSerialization.jsonObject(with: data, options: .allowFragments),
+            let jsonDict = jsonObject as? Dictionary<String, Any>,
+            let revString = jsonDict["number"] as? String,
+            let rev = Int(revString),
+            let translations = jsonDict["translations"] as? Dictionary<String, Any> else {
+                self.log("[LoquellaSDK/extractRevisionFromData]: Unable to load data (bad format?)")
+                return
+        }
+        
+        if rev > self.currentRevision {
+            self.log("[LoquellaSDK/extractRevisionFromData]: Loaded data with revision: \(rev)")
+            self.currentRevision = rev
+            self.currentTranslations = translations
+        } else {
+            self.log("[LoquellaSDK/extractRevisionFromData]: Revision found in data is \(rev) but the the current revision is \(self.currentRevision) - skipping data")
+        }
+    }
+    
     public func translate(key: String, comment: String?) -> String {
+    
+        self.log("[LoquellaSDK/translate]: Translating key: \(key)", logLevel: .all)
 
         if let source = self.currentTranslations[key] as? Dictionary<String, Any> {
             if let target = source[self.currentLocale] as? String {
+                self.log("[LoquellaSDK/translate]: -> Found target: \(target)", logLevel: .all)
                 return target
             }
         }
@@ -84,6 +195,16 @@ public class LoquellaSDK {
         self.markMissingTranslation(key: key, comment: comment)
         
         return key
+    }
+    
+    private func log(_ msg: String, logLevel: LogLevel = .verbose) {
+        if self.logLevel == .none {
+            return
+        }
+        
+        if self.logLevel == .all || self.logLevel == logLevel {
+            print(msg)
+        }
     }
     
 }

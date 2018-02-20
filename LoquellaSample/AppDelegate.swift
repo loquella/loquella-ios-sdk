@@ -17,7 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
-        LoquellaSDK.sharedInstance.logLevel = .verbose
+        LoquellaSDK.sharedInstance.logLevel = .all
         LoquellaSDK.sharedInstance.setApiKey("ba2aa6c7676d351a1668d145b0b8a496")
         
         // Override point for customization after application launch.

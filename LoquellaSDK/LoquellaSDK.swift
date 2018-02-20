@@ -110,7 +110,40 @@ public class LoquellaSDK {
     }
     
     private func markMissingTranslation(key: String, comment: String?) {
-        // Send missing key to webservice
+        self.log("[LoquellaSDK/markMissingTranslation]: Marking translation: \(key)", logLevel: .all)
+
+        guard
+            let apiKey = self.apiKey,
+            let url = URL(string: "http://localhost:3000/api/translations/\(apiKey)/mark_missing"),
+            let escapedKey = key.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)else {
+                return
+        }
+        
+        var urlRequest = URLRequest(url: url)
+    
+        let postParams = "source=\(escapedKey)"
+        let postData = postParams.data(using: .utf8)
+        
+        // Set the httpMethod and assign httpBody
+        urlRequest.httpMethod = "POST"
+        urlRequest.httpBody = postData
+        
+        let task =  self.urlSession.dataTask(with: urlRequest, completionHandler: { (data, response, error) in
+            if let error = error {
+                self.log("[LoquellaSDK/markMissingTranslation]: Failed to mark missing translation: \(error.localizedDescription)", logLevel: .all)
+            } else {
+                if let _ = data,
+                    let response = response as? HTTPURLResponse,
+                    response.statusCode == 200 {
+                    self.log("[LoquellaSDK/fetchLatestTranslations]: Mark missing translation succeeded", logLevel: .all);
+
+                } else {
+                    self.log("[LoquellaSDK/fetchLatestTranslations]: Failed to mark missing translation", logLevel: .all)
+                }
+            }
+        })
+        
+        task.resume()
     }
     
     private func saveCurrentRevisionToDocuments() {

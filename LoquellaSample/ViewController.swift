@@ -17,7 +17,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
-        self.titleLabel.text = "The quick brown fox jumps over the lazy dog".translate()
+        self.titleLabel.text = "Unknown translation".translate()
     }
 }
 

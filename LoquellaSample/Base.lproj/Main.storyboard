@@ -18,8 +18,20 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TnG-um-43b">
-                                <rect key="frame" x="166" y="323" width="42" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Welcome to Loquella" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TnG-um-43b">
+                                <rect key="frame" x="107.5" y="323" width="159.5" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Description text" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XsB-SW-ov7">
+                                <rect key="frame" x="127.5" y="354" width="121" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Version text" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lex-J7-GTW">
+                                <rect key="frame" x="143" y="626" width="90.5" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -27,17 +39,24 @@
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="Lex-J7-GTW" secondAttribute="bottom" constant="20" id="386-fG-fqQ"/>
+                            <constraint firstItem="XsB-SW-ov7" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="9s2-LJ-g9P"/>
+                            <constraint firstItem="Lex-J7-GTW" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="A3u-4A-doJ"/>
                             <constraint firstItem="TnG-um-43b" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="UzQ-lO-sFp"/>
+                            <constraint firstItem="XsB-SW-ov7" firstAttribute="top" secondItem="TnG-um-43b" secondAttribute="bottom" constant="10" id="Uzc-zE-1Sw"/>
                             <constraint firstItem="TnG-um-43b" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="pQB-aI-bBg"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
+                        <outlet property="descriptionLabel" destination="XsB-SW-ov7" id="7S3-hG-Wdx"/>
                         <outlet property="titleLabel" destination="TnG-um-43b" id="xyW-8R-fnt"/>
+                        <outlet property="versionLabel" destination="Lex-J7-GTW" id="VCJ-hu-LTP"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="32.799999999999997" y="32.833583208395808"/>
         </scene>
     </scenes>
 </document>

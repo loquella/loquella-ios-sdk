@@ -23,7 +23,7 @@ public class LoquellaSDK {
     
     public var logLevel: LogLevel = .none
     
-    private var currentLocale: String = "en-en"
+    private var currentLocale: String = "en-us"
     private var currentRevision: Int = 0
     private var currentTranslations: Dictionary<String, Any> = [:]
     
@@ -35,8 +35,6 @@ public class LoquellaSDK {
         
         self.apiKey = key
         
-        self.updateCurrentLocale()
-        
         if (self.hasRevisionInDocuments()) {
             self.restoreRevisionFromDocuments()
         } else {
@@ -44,10 +42,41 @@ public class LoquellaSDK {
         }
         
         self.fetchLatestTranslations()
+        self.updateCurrentLocale()
     }
 
     private func updateCurrentLocale() {
-        self.currentLocale = Locale.current.identifier.replacingOccurrences(of: "_", with: "-").lowercased()
+        
+        let userLocale = Locale.preferredLanguages[0].replacingOccurrences(of: "_", with: "-").lowercased()
+        
+        if (self.currentTranslations.count > 0) {
+            self.log("[LoquellaSDK/updateCurrentLocale]: Finding available locales inside translations")
+
+            if let first = self.currentTranslations.first {
+                if let targets = first.value as? Dictionary<String, Any> {
+                    
+                    // Do we have a direct match?
+                    if targets.index(forKey: userLocale) != nil {
+                        self.log("[LoquellaSDK/updateCurrentLocale]: Found direct match")
+
+                        self.currentLocale = userLocale
+                    } else {
+                        self.log("[LoquellaSDK/updateCurrentLocale]: Unable to find direct match, looking for most suitable locale")
+
+                        // If not we try to find the most suitable
+                        targets.forEach({ (key, value) in
+                            if key.contains(userLocale) {
+                                self.currentLocale = key
+                            }
+                        })
+                    }
+                }
+            }
+        } else {
+            self.log("[LoquellaSDK/updateCurrentLocale]: Translations not loaded yet - setting locale to default")
+            self.currentLocale = "en-us"
+        }
+ 
         self.log("[LoquellaSDK/updateCurrentLocale]: Setting current locale based on device settings to: \(self.currentLocale)")
     }
     
@@ -99,6 +128,7 @@ public class LoquellaSDK {
                     DispatchQueue.main.async {
                         self.extractRevisionFromData(data: data)
                         self.saveCurrentRevisionToDocuments()
+                        self.updateCurrentLocale()
                     }
                 } else {
                     self.log("[LoquellaSDK/fetchLatestTranslations]: Downloaded data but unable to parse it")

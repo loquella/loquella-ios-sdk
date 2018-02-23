@@ -15,34 +15,49 @@ public extension String {
      
      */
     public func translate() -> String {
-        return LoquellaSDK.sharedInstance.translate(key: self, comment: nil)
+        return translate(nil)
+    }
+    
+    /**
+     Translate a single string and replaces :1, :2, :3 etc inside string withr provided args
+     
+     */
+    public func translate(_ args: String?...) -> String {
+        return translate(comment: nil, args: args.map({ (input) -> String in
+            return input ?? ""
+        }))
     }
     
     /**
      Translates a single string and saves a comment for the translator
      
      */
-    public func translate(comment: String) -> String {
-        return LoquellaSDK.sharedInstance.translate(key: self, comment: comment)
+    public func translate(comment: String?, args: [String]?) -> String {
+        
+        var translation = LoquellaSDK.sharedInstance.translate(key: self, comment: comment)
+        
+        if let providedArgs = args {
+            var index = 1
+            providedArgs.forEach { (arg) in
+                translation = translation.replacingOccurrences(of: ":\(index)", with: arg)
+                index = index + 1
+            }
+        }
+        
+        return translation
     }
-    
+}
+
+extension String {
     /**
-     Translate two strings but only showing either one or the other depending on count input
+     Returns self or either depending on result of `r`
      
      */
-    public func translatePlural(count: Int, other: String) -> String {
-        return translateEither(count == 1, either: other)
-    }
-    
-    /**
-     Translates either string depending on result of `r`
-     
-     */
-    public func translateEither(_ r: Bool, either: String) -> String {
+    public func either(_ r: Bool, either: String) -> String {
         if r {
-            return translate()
+            return self
         } else {
-            return either.translate()
+            return either
         }
     }
 }
@@ -56,14 +71,6 @@ public extension UILabel {
         if let text = self.text {
             self.text = text.translate()
         }
-    }
-    
-    /**
-     Translates a label and saves a comment for the translator. Requries text already set
-     
-     */
-    public func translate(comment: String) {
-        translate() // TODO: implement
     }
 }
 
@@ -82,14 +89,6 @@ public extension UIButton {
      */
     public func translate(state: UIControlState) {
         setTitle(self.title(for: state)?.translate() ?? "", for: state)
-    }
-    
-    /**
-     Translates a button and saves a comment for the translator. Requries title already set.
-     
-     */
-    public func translate(comment: String) {
-        self.translate(state: .normal)
     }
 }
 

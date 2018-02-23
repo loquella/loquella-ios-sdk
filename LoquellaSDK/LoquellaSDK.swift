@@ -225,7 +225,9 @@ public class LoquellaSDK {
             }
         }
         
+        #if DEBUG
         self.markMissingTranslation(key: key, comment: comment)
+        #endif
         
         return key
     }

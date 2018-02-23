@@ -18,6 +18,10 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view, typically from a nib.
         
         self.titleLabel.text = "Unknown translation".translate()
+        
+        print("We should translate this text, right?".translate())
+        print("My name is :1".translate("Hello World"))
+        
     }
 }
 

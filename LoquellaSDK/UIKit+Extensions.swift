@@ -92,6 +92,16 @@ extension String {
     }
 }
 
+@objc public extension UITextField {
+    /**
+     Translates a textfield placeholder. Requries placeholder already set
+     
+     */
+    public func translate() {
+        self.placeholder = self.placeholder?.translate() ?? ""
+    }
+}
+
 @objc public extension UIView {
     /**
      Traverses all subviews and autotranslates anything with a label
@@ -107,6 +117,10 @@ extension String {
                 if let button = view as? UIButton {
                     // TODO: Support all states
                     button.translate(state: .normal)
+                }
+            } else if view.isKind(of: UITextField.self) {
+                if let field = view as? UITextField {
+                    field.translate()
                 }
             } else if view.isKind(of: UIView.self) {
                 view.translateAll()

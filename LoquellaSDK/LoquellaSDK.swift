@@ -259,7 +259,7 @@ import Foundation
         self.markMissingTranslation(key: key, comment: comment)
         #endif
         
-        return key
+        return NSLocalizedString(key, comment: comment ?? "")
     }
     
     private func log(_ msg: String, logLevel: LogLevel = .verbose) {

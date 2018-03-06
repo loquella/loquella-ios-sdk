@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-@objc public extension String {
+public extension String {
     /**
      Translate a single string
      
@@ -48,7 +48,7 @@ import UIKit
     }
 }
 
-@objc extension String {
+extension String {
     /**
      Returns self or either depending on result of `r`
      

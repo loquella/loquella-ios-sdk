@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-public extension String {
+@objc public extension String {
     /**
      Translate a single string
      
@@ -48,7 +48,7 @@ public extension String {
     }
 }
 
-extension String {
+@objc extension String {
     /**
      Returns self or either depending on result of `r`
      
@@ -62,7 +62,7 @@ extension String {
     }
 }
 
-public extension UILabel {
+@objc public extension UILabel {
     /**
      Translates a label. Requries text already set
      
@@ -74,7 +74,7 @@ public extension UILabel {
     }
 }
 
-public extension UIButton {
+@objc public extension UIButton {
     /**
      Translates a button for .normal state. Requries title already set
      
@@ -92,7 +92,7 @@ public extension UIButton {
     }
 }
 
-public extension UIView {
+@objc public extension UIView {
     /**
      Traverses all subviews and autotranslates anything with a label
      
@@ -108,6 +108,8 @@ public extension UIView {
                     // TODO: Support all states
                     button.translate(state: .normal)
                 }
+            } else if view.isKind(of: UIView.self) {
+                view.translateAll()
             }
         }
     }

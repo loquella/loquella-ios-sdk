@@ -110,7 +110,7 @@ import Foundation
         
         guard
             let key = self.apiKey,
-            let url = URL(string: "http://localhost:3000/api/projects/\(key)/revisions/latest?ref=\(self.currentRevision)") else {
+            let url = URL(string: "http://api.loquella.io/v1/projects/\(key)/revisions/latest?ref=\(self.currentRevision)") else {
                 return
         }
         
@@ -144,7 +144,7 @@ import Foundation
 
         guard
             let apiKey = self.apiKey,
-            let url = URL(string: "http://localhost:3000/api/translations/\(apiKey)/mark_missing"),
+            let url = URL(string: "http://api.loquella.io/v1/translations/\(apiKey)/mark_missing"),
             let escapedKey = key.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)else {
                 return
         }

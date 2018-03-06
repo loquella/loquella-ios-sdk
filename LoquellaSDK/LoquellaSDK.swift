@@ -9,7 +9,7 @@
 import Foundation
 
 
-public class LoquellaSDK {
+@objc public class LoquellaSDK : NSObject {
     
     public enum LogLevel {
         case none

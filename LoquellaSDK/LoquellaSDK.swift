@@ -145,7 +145,7 @@ import Foundation
         guard
             let apiKey = self.apiKey,
             let url = URL(string: "http://api.loquella.io/v1/translations/\(apiKey)/mark_missing"),
-            let escapedKey = key.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)else {
+            let escapedKey = key.addingPercentEncoding(withAllowedCharacters: .alphanumerics) else {
                 return
         }
         

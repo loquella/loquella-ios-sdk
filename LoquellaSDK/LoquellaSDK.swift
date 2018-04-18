@@ -65,8 +65,13 @@ import Foundation
 
                         // If not we try to find the most suitable
                         targets.forEach({ (key, value) in
-                            if key.contains(userLocale) {
-                                self.currentLocale = key
+                            
+                            let segments = userLocale.components(separatedBy: "-")
+                            
+                            if let segment = segments.first {
+                                if key.contains(segment) {
+                                    self.currentLocale = key
+                                }
                             }
                         })
                     }

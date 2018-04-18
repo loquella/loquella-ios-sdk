@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "LoquellaSDK"
-  s.version      = "0.0.9"
+  s.version      = "0.0.10"
   s.summary      = "The SDK you need to make iOS translation easy."
 
   # This description is used to generate tags and improve search results.
